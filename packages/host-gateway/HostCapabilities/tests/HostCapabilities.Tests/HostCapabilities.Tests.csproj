@@ -9,6 +9,7 @@
     <PackageReference Include="MSTest.TestFramework" />
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
     <ProjectReference Include="..\..\src\HostCapabilities\HostCapabilities.csproj" />
+    <ProjectReference Include="..\..\src\HostCapabilities.Tray\HostCapabilities.Tray.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fixtures\fake_broker.py" CopyToOutputDirectory="PreserveNewest" />

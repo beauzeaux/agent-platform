@@ -33,10 +33,10 @@ SDK 10.0.403 is selected by `global.json`. Restore uses the configured 1ES feed;
 never add nuget.org. The publish directory includes both reused applications,
 native-ADO/gRPC, OTel, IdentityModel, WAM/native dependencies and third-party
 notices. Install .NET/ASP.NET Core 10 x64 on the signed-in Windows host.
-This machine's system installation is .NET 8. Use the explicit `-DotnetRoot`
-script option below for .NET 10: it launches the adjacent published DLL with
-that root's `dotnet.exe`. No machine/user runtime environment variable is changed,
-and unrelated .NET 8 apps retain their existing runtime selection.
+This machine's system installation is .NET 8. Launch the adjacent published DLL
+with the .NET 10 installation's `dotnet.exe`, as shown in the canary commands.
+No machine/user runtime environment variable is changed, and unrelated .NET 8
+apps retain their existing runtime selection.
 The isolated artifacts path is important: the live legacy proxy may lock its
 source checkout's Release binaries; builds must not overwrite those binaries.
 Stage each update in a separate publish directory; never overwrite the original
@@ -45,6 +45,48 @@ Published operation does not require either sibling source directory. The
 explicitly configured Agency executable, Python broker directory (including
 `prepare_runtime.py`), profiles and empty global configuration remain required.
 `native-ado` and `deployment` have separate owners; do not format/edit those trees.
+
+## System tray setup
+
+Publish the tray project for Windows and retain its output directory. The
+published output is expected to contain `HostCapabilities.Tray.exe`, which is
+a WinExe and accepts `--config <absolute JSON path>`. Keep the JSON configuration
+outside source control with the same protections and validated absolute paths
+used for the console host.
+
+From the repository root, preview the current-user at-logon task installation
+before applying it:
+
+```powershell
+$tray = (Resolve-Path '.artifacts\publish-tray\HostCapabilities.Tray.exe').Path
+$config = (Resolve-Path "$env:LOCALAPPDATA\HostCapabilities\config.local.json").Path
+.\packages\host-gateway\HostCapabilities\deployment\host\Install-Tray.ps1 -Executable $tray -Config $config
+.\packages\host-gateway\HostCapabilities\deployment\host\Install-Tray.ps1 -Executable $tray -Config $config -Apply
+```
+
+The apply step registers one interactive, battery-tolerant task for the
+currently signed-in Windows user and starts it immediately. Subsequent runs
+update only a task whose executable action exactly matches the requested tray
+executable. The tray icon and menu show the tray host's lifecycle/readiness
+status and its supported actions. Because the executable is a WinExe, startup
+does not leave a console window. Task installation itself does not change the
+host configuration or login state. The task is not machine-wide and runs only
+when that user is signed in. Reapplying the same executable and configuration
+while the task is already running is a no-op. To change the configuration of a
+running tray, choose **Exit** from the tray menu, then run the apply command
+again; the installer never abruptly terminates the tray or a legacy process.
+
+Preview removal, then apply it with the same executable and config:
+
+```powershell
+.\packages\host-gateway\HostCapabilities\deployment\host\Install-Tray.ps1 -Executable $tray -Config $config -Remove
+.\packages\host-gateway\HostCapabilities\deployment\host\Install-Tray.ps1 -Executable $tray -Config $config -Remove -Apply
+```
+
+Removal changes only the matching tray task. It does not stop or alter any
+legacy task or service. The existing secure configuration, protected state,
+TLS/identity authorization, and explicit `LocalLlmGateway`/`AdoDevProxy` login
+boundaries remain unchanged.
 
 ## Native model protocols
 
@@ -105,28 +147,15 @@ $exe = 'Q:\src\tools\HostCapabilities\.artifacts\publish-native-admission\HostCa
 $runtime = 'C:\Users\nibeauli\.dotnet'
 $cfg = "$env:LOCALAPPDATA\HostCapabilities\config.local.json"
 & "$runtime\dotnet.exe" ([IO.Path]::ChangeExtension($exe, '.dll')) doctor --config $cfg
-.\scripts\Start-HostCapabilities.ps1 -Executable $exe -Config $cfg -DotnetRoot $runtime # dry run
-.\scripts\Start-HostCapabilities.ps1 -Executable $exe -Config $cfg -DotnetRoot $runtime -Apply
 Invoke-RestMethod http://127.0.0.1:14540/health/live
 Invoke-RestMethod http://127.0.0.1:14540/health/llm/ready
 Invoke-RestMethod http://127.0.0.1:14540/health/ado/ready
 Invoke-RestMethod http://127.0.0.1:14540/health/agency/ready
-.\scripts\Stop-HostCapabilities.ps1 -Config $cfg                           # dry run
-.\scripts\Stop-HostCapabilities.ps1 -Config $cfg -Apply
-.\scripts\Install-HostCapabilities.ps1 -Executable $exe -Config $cfg -DotnetRoot $runtime # dry run
-.\scripts\Install-HostCapabilities.ps1 -Executable $exe -Config $cfg -DotnetRoot $runtime -Apply
-# Remove only this new logon registration, without stopping any process:
-.\scripts\Install-HostCapabilities.ps1 -Executable $exe -Config $cfg -Remove -Apply
 ```
 
-Start verifies liveness and exact owned PID. Stop verifies PID, executable and
-creation time, then requests bounded graceful shutdown through a current-user-
-only named pipe. It never kills processes by name. One interactive limited-
-privilege logon task starts the published executable directly by default, or the
-specified `dotnet.exe` plus adjacent DLL when `-DotnetRoot` is supplied. Stop
-accepts either actual owner executable and still checks PID/creation time.
-The default is backward-compatible; scripts never
-disable/restart legacy tasks. The parent owns canary/deployment/cutover.
+The parent owns canary/deployment/cutover. Use the tray setup above for the
+current signed-in user's supported tray registration; do not repoint legacy
+tasks or services to the host.
 
 ## Readiness, protocol and telemetry contracts
 

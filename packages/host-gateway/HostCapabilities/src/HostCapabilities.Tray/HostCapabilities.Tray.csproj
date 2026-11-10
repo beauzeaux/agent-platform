@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HostCapabilities\HostCapabilities.csproj" />
+    <InternalsVisibleTo Include="HostCapabilities.Tests" />
+  </ItemGroup>
+</Project>

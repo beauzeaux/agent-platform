@@ -7,6 +7,7 @@
     <Project Path="packages/host-gateway/HostCapabilities/native-ado/src/NativeAdo/NativeAdo.csproj" />
     <Project Path="packages/host-gateway/HostCapabilities/native-ado/tests/NativeAdo.Tests/NativeAdo.Tests.csproj" />
     <Project Path="packages/host-gateway/HostCapabilities/src/HostCapabilities/HostCapabilities.csproj" />
+    <Project Path="packages/host-gateway/HostCapabilities/src/HostCapabilities.Tray/HostCapabilities.Tray.csproj" />
     <Project Path="packages/host-gateway/HostCapabilities/tests/HostCapabilities.Tests/HostCapabilities.Tests.csproj" />
     <Project Path="packages/host-gateway/LocalLlmGateway/src/LocalLlmGateway/LocalLlmGateway.csproj" />
     <Project Path="packages/host-gateway/LocalLlmGateway/tests/LocalLlmGateway.Tests/LocalLlmGateway.Tests.csproj" />
