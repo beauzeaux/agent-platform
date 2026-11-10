@@ -1,0 +1,41 @@
+metadata:
+  atespace: kagent-lab-runtime
+  name: golden-volumes-v2
+workerSelector:
+  matchLabels:
+    kagent.dev/worker-pool-name: kagent-default
+    kagent.dev/worker-pool-namespace: kagent
+containers:
+  - name: golden
+    image: busybox:1.37.0@sha256:a7dbc319b1438115a207e11930dc4bb3e643dcb3ec0bdd694bb36cd8fad289ec
+    command: [/bin/sh, -c]
+    args:
+      - |
+        set -eu
+        mkdir -p /data
+        previous=0
+        if [ -f /data/boots ]; then previous=$(cat /data/boots); fi
+        printf '%s\n' "$((previous + 1))" > /data/boots
+        cat /proc/sys/kernel/random/uuid > /data/instance
+        if [ ! -f /data/note ]; then printf 'durable-volume-proof\n' > /data/note; fi
+        printf 'ready\n' > /data/readyz
+        exec httpd -f -p 80 -h /data
+    wakeupProbe:
+      httpGet:
+        path: /readyz
+        port: 80
+    volumeMounts:
+      - name: data
+        mountPath: /data
+volumes:
+  - name: data
+    durableDir: {}
+resources:
+  limits:
+    cpuMillicores: 1000
+    memoryBytes: 268435456
+snapshotConfig:
+  preferredFidelity: SNAPSHOT_FIDELITY_VOLUMES
+  storageLocation: gs://ate-snapshots/kagent-lab-runtime/
+  goldenSnapshotConfig:
+    mode: GOLDEN_SNAPSHOT_MODE_DISABLED

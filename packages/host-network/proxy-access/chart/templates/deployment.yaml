@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agent-proxies.name" . }}
+  labels:
+    {{- include "agent-proxies.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "agent-proxies.selector" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "agent-proxies.selector" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "agent-proxies.name" . }}
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 15
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gateway
+          image: {{ if .Values.image.digest }}{{ printf "%s@%s" .Values.image.repository .Values.image.digest | quote }}{{ else }}{{ printf "%s:%s" .Values.image.repository .Values.image.tag | quote }}{{ end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["node", "/app/config/gateway.js"]
+          env:
+            - name: GATEWAY_CONFIG
+              value: /app/config/config.json
+            - name: TLS_DIRECTORY
+              value: /app/tls
+          ports:
+            - name: session
+              containerPort: 8443
+            - name: data
+              containerPort: 8444
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          readinessProbe:
+            tcpSocket:
+              port: data
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: session
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: code
+              mountPath: /app/config
+              readOnly: true
+            - name: tls
+              mountPath: /app/tls
+              readOnly: true
+            {{- if .Values.broker.dynamicActorsConfigMap }}
+            - name: agency-bindings
+              mountPath: /app/agency-bindings
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: code
+          configMap:
+            name: {{ include "agent-proxies.name" . }}-code
+            defaultMode: 0444
+        - name: tls
+          secret:
+            secretName: {{ required "existingTlsSecret must name a pre-created Secret" .Values.existingTlsSecret }}
+            defaultMode: 0440
+        {{- if .Values.broker.dynamicActorsConfigMap }}
+        - name: agency-bindings
+          configMap:
+            name: {{ .Values.broker.dynamicActorsConfigMap }}
+            defaultMode: 0444
+        {{- end }}

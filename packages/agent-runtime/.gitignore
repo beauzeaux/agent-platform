@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+**/__pycache__/
+.state/
+.artifacts/
+TestResults/
+*.pfx
+*.pem
+*.key
+*.dpapi
+*.log
+*.user
+config.local.json

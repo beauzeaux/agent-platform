@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src\NativeAdo\NativeAdo.csproj" />
+  <Project Path="src\NativeAdo.Canary\NativeAdo.Canary.csproj" />
+  <Project Path="src\NativeAdo.Probe\NativeAdo.Probe.csproj" />
+  <Project Path="tests\NativeAdo.Tests\NativeAdo.Tests.csproj" />
+</Solution>

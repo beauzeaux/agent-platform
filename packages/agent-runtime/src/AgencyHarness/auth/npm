@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+directory=$PWD
+while :; do
+    config="$directory/.npmrc"
+    if [ -f "$config" ] && grep -Eiq 'pkgs\.(dev\.azure\.com|visualstudio\.com)' "$config"; then
+        artifacts-npm-credprovider --config-file "$config" --verbosity error
+        break
+    fi
+    [ "$directory" = "/" ] && break
+    directory=$(dirname "$directory")
+done
+
+exec npm-real "$@"

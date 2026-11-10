@@ -1,0 +1,19 @@
+rules:
+  - https:
+      hostnames:
+        - agent-proxies.proxy-access.svc.cluster.local
+      ports:
+        numbers: [8443]
+      effects:
+        replaceHeaders:
+          - header: Authorization
+            prefix: "Bearer "
+            actorJwt:
+              audiences:
+                - https://agent-proxies.proxy-access.svc/session
+              expirationSeconds: 300
+  - tlsPassthrough:
+      hostnames:
+        - agent-proxies.proxy-access.svc.cluster.local
+      ports:
+        numbers: [8444]

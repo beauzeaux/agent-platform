@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: windows-wam-provider-ca
+  namespace: ate-system
+  annotations:
+    hostcapabilities/readiness: blocked-until-parent-supplies-public-serving-ca
+data:
+  ca.crt: |
+    __PARENT_PUBLIC_WINDOWS_PROVIDER_CA_PEM_REQUIRED__

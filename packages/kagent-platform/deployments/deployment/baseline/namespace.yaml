@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: baseline
+  labels:
+    app.kubernetes.io/managed-by: host-capabilities-baseline
+    app.kubernetes.io/part-of: a2a-baseline
+  annotations:
+    host-capabilities/baseline-state: prepared-not-running

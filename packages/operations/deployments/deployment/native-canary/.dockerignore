@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!.dockerignore
+!public-probe.mjs
+!probe-worker.mjs
+!pins.json

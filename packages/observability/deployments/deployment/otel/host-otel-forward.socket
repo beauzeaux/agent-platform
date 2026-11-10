@@ -1,0 +1,9 @@
+[Unit]
+Description=HostCapabilities private OTLP listener
+
+[Socket]
+ListenStream=127.0.0.1:14318
+NoDelay=true
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,9 @@
+{
+  "replace_headers": [
+    {
+      "header": "authorization",
+      "prefix": "Bearer ",
+      "credential_uri": "ate-secret://windows-wam/canary/ado"
+    }
+  ]
+}

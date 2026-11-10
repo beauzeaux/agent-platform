@@ -1,0 +1,7 @@
+The composed LocalLlmGateway includes an MIT-licensed adaptation of
+ericc-ch/copilot-api. Its original notices are distributed as
+LocalLlmGateway.THIRD-PARTY-NOTICES in the published output.
+
+The NativeAdo credential-provider protocol retains the Apache-2.0 Substrate
+license header in its source. Third-party .NET packages retain their upstream
+licenses and notices.

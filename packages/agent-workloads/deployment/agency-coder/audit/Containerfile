@@ -1,0 +1,3 @@
+ARG AGENCY_CODER_IMAGE
+FROM ${AGENCY_CODER_IMAGE}
+ENV AGENCY_REPOSITORY_URL=https://dev.azure.com/msasg/Engineering%20Fundamentals/_git/Audit

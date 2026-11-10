@@ -1,0 +1,96 @@
+apiVersion: api.kagent.dev/v1alpha3
+kind: Harness
+metadata:
+  name: ${AGENT_NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    app.kubernetes.io/managed-by: host-capabilities-agency-coder
+spec:
+  byo: {}
+  workload:
+    image: ${HARNESS_IMAGE}
+    command: ["/opt/agency/auth/entrypoint"]
+  substrate:
+    workerPoolRef:
+      name: ${WORKER_POOL}
+    snapshotPolicy:
+      location: ${SNAPSHOT_LOCATION}
+  env:
+    - name: IDENTITY_ENDPOINT
+      value: ${AGENCY_IMDS_ORIGIN}/metadata/identity/oauth2/token
+    - name: IDENTITY_HEADER
+      value: "Bearer kagent-credential-injected"
+    - name: AGENCY_SANDBOX
+      value: "true"
+    - name: GCM_AZREPOS_MANAGEDIDENTITY
+      value: system
+    - name: GCM_CREDENTIAL_STORE
+      value: none
+    - name: GCM_INTERACTIVE
+      value: "0"
+    - name: GIT_TERMINAL_PROMPT
+      value: "0"
+    - name: ARTIFACTS_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED
+      value: "false"
+    - name: ARTIFACTS_CREDENTIALPROVIDER_MSAL_FILECACHE_ENABLED
+      value: "false"
+    - name: NO_PROXY
+      value: localhost,127.0.0.1,.svc,.cluster.local
+    - name: AGENCY_POLICY_URL
+      value: ${AGENCY_BASE_URL}/agency/policy
+    - name: AGENCY_PLUGINS_URL
+      value: ${AGENCY_BASE_URL}/agency/plugins
+---
+apiVersion: api.kagent.dev/v1alpha3
+kind: EgressPolicy
+metadata:
+  name: ${AGENT_NAME}-imds
+  namespace: ${NAMESPACE}
+  labels:
+    app.kubernetes.io/managed-by: host-capabilities-agency-coder
+spec:
+  destinations:
+    - origin: ${AGENCY_BASE_URL}
+      authentication:
+        header: Authorization
+        prefix: "Bearer "
+        actorJwt:
+          audiences: ["${ACTOR_TOKEN_AUDIENCE}"]
+          expirationSeconds: 300
+    - origin: ${AGENCY_IMDS_ORIGIN}
+      authentication:
+        header: X-IDENTITY-HEADER
+        prefix: "Bearer "
+        actorJwt:
+          audiences: ["${ACTOR_TOKEN_AUDIENCE}"]
+          expirationSeconds: 300
+    - origin: https://dev.azure.com
+---
+apiVersion: api.kagent.dev/v1alpha3
+kind: AgentTemplate
+metadata:
+  name: ${AGENT_NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    app.kubernetes.io/managed-by: host-capabilities-agency-coder
+spec:
+  description: Generic repository coding through the native AgencyCoder adapter
+  modelConfig:
+    name: ${MODEL_CONFIG_NAME}
+  systemPrompt: >-
+    Read applicable repository instructions. Perform only the explicitly requested
+    bounded coding task using approved tools. Never replay uncertain accepted work.
+---
+apiVersion: api.kagent.dev/v1alpha3
+kind: Agent
+metadata:
+  name: ${AGENT_NAME}
+  namespace: ${NAMESPACE}
+spec:
+  egressPolicyRefs:
+    - name: ${AGENT_NAME}-imds
+  harnessRef:
+    name: ${AGENT_NAME}
+  template:
+    ref:
+      name: ${AGENT_NAME}

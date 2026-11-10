@@ -1,0 +1,15 @@
+Actor SESSION_URL: https://{{ include "agent-proxies.name" . }}.{{ .Release.Namespace }}.svc.cluster.local:8443/session
+Actor DATA_URL:    https://{{ include "agent-proxies.name" . }}.{{ .Release.Namespace }}.svc.cluster.local:8444
+Actor TLS SNI and egress policy hostname: {{ include "agent-proxies.name" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+Native actors have no Kubernetes DNS search suffix; use these full DNS names.
+Short names and .svc aliases work only where Pod DNS search suffixes are configured.
+JWT audience remains the configured logical label: {{ .Values.auth.audience }}
+Do not change the audience merely because actor URLs/SNI use the full DNS name.
+
+Namespace and TLS Secret are external; this release never creates or deletes them.
+GET /health on either HTTPS port returns only 204, without credentials or details.
+TCP probes avoid authentication. Actor readiness is separately http://127.0.0.1:8081/readyz.
+Pin public JWKS before installation; actor.ate.dev identity consistency is mandatory.
+Tokens are RAM-only; a gateway restart invalidates tokens unless an optional external
+signing key is mounted. Use one replica with the default randomly generated signing key.

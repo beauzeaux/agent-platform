@@ -1,0 +1,46 @@
+fullnameOverride: cluster-management-tools
+replicaCount: 1
+tools:
+  loglevel: warn
+  enabledTools: [k8s, prometheus]
+  args: ["--read-only"]
+  image:
+    registry: ghcr.io
+    repository: kagent-dev/kagent/tools
+    tag: 0.3.0@sha256:dab4019f593becf20466f21e3c9dba1895122bbdaf07cb737539eee20b7b0274
+    pullPolicy: IfNotPresent
+  prometheus:
+    url: http://kube-prom-stack-kube-prome-prometheus.observability.svc.cluster.local:9090
+rbac:
+  create: true
+  readOnly: true
+  allowSecrets: false
+  additionalRules:
+    - apiGroups: [""]
+      resources: [nodes, persistentvolumes]
+      verbs: [get, list, watch]
+    - apiGroups: [api.kagent.dev]
+      resources: [agents, agenttemplates, harnesses, remotemcpservers, modelconfigs, egresspolicies]
+      verbs: [get, list, watch]
+    - apiGroups: [discovery.k8s.io]
+      resources: [endpointslices]
+      verbs: [get, list, watch]
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: [ALL]
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+otel:
+  tracing:
+    enabled: false

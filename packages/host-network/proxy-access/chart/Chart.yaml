@@ -1,0 +1,6 @@
+apiVersion: v2
+name: agent-proxies
+description: Actor-authenticated HTTPS model and explicit CONNECT gateway
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

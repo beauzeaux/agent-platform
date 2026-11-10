@@ -1,0 +1,6 @@
+ARG AGENCY_HARNESS_IMAGE
+FROM ${AGENCY_HARNESS_IMAGE}
+COPY publish/ /app/agency-coder/
+ENV AGENCY_AGENT_EXECUTABLE=/usr/bin/dotnet \
+    AGENCY_AGENT_ENTRYPOINT=/app/agency-coder/AgencyCoder.dll \
+    AGENCY_COPILOT_EXECUTABLE=/opt/agency/agency

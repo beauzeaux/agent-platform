@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "project": "test",
+  "state": "prepared-not-activated",
+  "agentInputDirectory": "agent-input",
+  "hashAlgorithm": "sha256",
+  "files": {
+    "AGENTS.md": "b0050c8540e1513145212a98112b283241f7eddcfb9650386d4af04fa8134bff",
+    "BRIEF.md": "a73077e695a22fad4bb3c1d5d28a746bdbf0f8b7ec3b12bd8af8eb5aae7063ed",
+    "DOCUMENTATION.md": "d4b671e885effd1e6237c11389b9f26b3940ab045bec54239027f0b3f7e49093",
+    "ROADMAP.md": "5bc1973f8527121a16d24bfdf2973e414f433970726c6f080713436f03ee67ac",
+    "swarm-plan.json": "0c850e63effa5f2e914f0c70bc51e5c883b4e6115a4544335f13693923f7d90b"
+  },
+  "packageSha256": "b5ae0ec903775bc30725367dc50ea7ac89a042870337a31e022bf310c6da6607",
+  "packageHashEncoding": "UTF-8 JSON of files with sorted keys and separators comma/colon, no whitespace",
+  "sourceSpecificationCommit": "2a06b43a9086a517efd0317971983b02cba62991",
+  "baseCommit": "5625d63bb645a0ae69101b7574d73194ecb50993",
+  "baseTree": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+  "baseParentCount": 0,
+  "baseFileCount": 0,
+  "modelDiscovery": {
+    "mai-code-2": "advertised",
+    "gpt-5.6-sol": "advertised",
+    "gpt-6.1-sol": "advertised-2026-11-05",
+    "gpt-6.1-terra": "advertised-2026-11-05",
+    "grok-4.7": "advertised-2026-11-05",
+    "gemini-4-argon": "production-advertised-chat-completions-only-2026-11-05",
+    "inferencePerformed": false
+  },
+  "argonProtocolEvidence": {
+    "upstreamModelCount": 40,
+    "localCompatibleModelCountAtDiagnosis": 30,
+    "upstreamAdvertisedToolCalls": true,
+    "upstreamSupportedEndpoint": "/chat/completions",
+    "productionSupportedEndpoints": ["/responses", "/chat/completions"],
+    "stagedSupportedEndpoints": ["/responses", "/chat/completions"],
+    "incompatibleEndpointAdmissionEnforced": true,
+    "gatewaySourceChanged": true,
+    "productionRuntimeChanged": true,
+    "gatewayReleaseTestsPassed": 92,
+    "targetedHostReleaseTestsPassed": 24,
+    "formattingCheck": "touched-file checks passed; 354 pre-existing ENDOFLINE diagnostics in three untouched test files",
+    "liveInferenceVerified": true,
+    "verifiedRuntimeScope": "public disposable official-ADK Argon Chat/MCP fixture; not custom business SDK"
+  },
+  "stagedGatewayRuntime": {
+    "directory": "Q:\\src\\tools\\HostCapabilities\\.artifacts\\runtime-chat-20261105-375cb3d8",
+    "deploymentState": "production",
+    "artifactSha256": {
+      "HostCapabilities.dll": "35e6820f63d1701d2aac84d951b2514153067b1b5a56d361420825f8aedfaf50",
+      "LocalLlmGateway.dll": "61831110a64e26de32601ba184726b1b5de0d2c97ec0cca6ac2733433e2d0b60"
+    },
+    "publishedLifecycle": "passed",
+    "isolatedMetadataCanary": "passed; exact Argon advertises only /chat/completions",
+    "canaryModelCountObserved": 31,
+    "canaryStoppedAndTemporaryStateRemoved": true,
+    "productionCutover": "completed-after-explicit-user-approval-2026-11-05",
+    "productionProcessIdObserved": 46504,
+    "cutoverSeconds": 14.29,
+    "completedAtUtc": "2026-11-05T19:58:51.3943756Z",
+    "rollbackDirectory": "%LOCALAPPDATA%\\HostCapabilities\\rollbacks\\chat-20261105T195836Z-1d033467",
+    "productionReadiness": "HTTP 200",
+    "realLogonTaskChanged": true,
+    "logonTaskEnabled": true,
+    "startupMatchesPromotedPayload": true,
+    "productionConfigurationUnchanged": true,
+    "allFiveCompatibilityListenersOwned": true,
+    "productionAnonymousChatStatus": 401,
+    "productionModelCountObserved": 34,
+    "bridgeOrActorHarnessChanged": true,
+    "nativeChatBridgeEnabled": true,
+    "customCodingHarnessChatEnabled": false,
+    "inferencePerformed": false
+  },
+  "a2aSanityEvidence": {
+    "runId": "da6b1942-be01-4200-bff5-a157e83ec65d",
+    "passed": true,
+    "models": ["mai-code-2", "gpt-6.1-sol", "gemini-4-argon"],
+    "codingChecksPassed": 7,
+    "mcpChallengeProofs": 2,
+    "resourcesRemoved": 14,
+    "sessionsAbsent": 3,
+    "nativeSessionActorsRemaining": 0,
+    "imageDigest": "sha256:82321e3ca831eb95b23103b9047205613fa38f757de18e4ed63d3ac556e658da",
+    "protectedReport": "/home/nibeauli/kagent-lab/a2a-sanity/da6b1942-be01-4200-bff5-a157e83ec65d/state.json",
+    "businessSwarmStarted": false
+  },
+  "modelLaunchBlockers": [
+    "choose and validate each business reviewer/SDET runtime; official ADK Argon works but the custom coding harness remains Responses-only",
+    "business-scoped permissions and model/tool canaries remain required; public sanity proof does not activate the business swarm"
+  ],
+  "toolingResearch": {
+    "installedOrExecuted": false,
+    "tm7CandidateRepository": "microsoft/hve-core",
+    "tm7CandidateSourceCommit": "be6ab3795eb7fe7c735a7ba95f2e288209636c8b",
+    "mermaidCandidateRepository": "mermaid-js/mermaid-cli",
+    "mermaidCandidateSourceCommit": "1423a0d7967d275a9d360ba0617f569550827c8b",
+    "nativeTmtValidationPerformed": false
+  }
+}

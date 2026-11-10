@@ -1,0 +1,12 @@
+[Unit]
+Description=HostCapabilities private OTLP access
+Requires=host-otel-forward.socket
+After=network.target host-otel-forward.socket
+
+[Service]
+Type=exec
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd @OTEL_COLLECTOR_ENDPOINT@
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+NoNewPrivileges=true

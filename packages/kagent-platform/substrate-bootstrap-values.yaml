@@ -1,0 +1,13 @@
+preview: [PerTemplateSnapshotLocation]
+postgres:
+  clientCertificates:
+    enabled: true
+ateApi:
+  authorization:
+    bootstrapOwners:
+      - spiffe://cluster.local/ns/kagent/sa/kagent-controller
+      - system:serviceaccount:ate-system:ate-client
+credentialProvider:
+  namespacePolicies:
+    - atespace: kagent
+      allowedNamespaces: [kagent]

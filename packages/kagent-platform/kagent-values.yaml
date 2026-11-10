@@ -1,0 +1,49 @@
+global:
+  watchNamespaces: [kagent]
+controller:
+  replicas: 1
+  substrateClientCertificate:
+    enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: observability
+      labels:
+        release: kube-prom-stack
+      prometheusServiceAccount:
+        namespace: observability
+        name: kube-prom-stack-kube-prome-prometheus
+ui:
+  replicas: 1
+config:
+  server:
+    grpcReflection: true
+    auth:
+      mode: insecure
+  runtimeDefaults:
+    cpu: "1"
+    memory: 1Gi
+substrateWorkerPool:
+  create: true
+  replicas: 3
+  workerImage: ghcr.io/kagent-dev/substrate/ateworker-gvisor:v1.0.0-rc1
+  sandboxClass: gvisor
+  template:
+    nodeSelector: {}
+    resources:
+      requests:
+        cpu: "1"
+        memory: 2Gi
+      limits:
+        cpu: "4"
+        memory: 8Gi
+kagent-tools:
+  enabled: false
+providers:
+  default: bedrock
+  bedrock: {}
+database:
+  postgres:
+    clientCertificate:
+      enabled: true

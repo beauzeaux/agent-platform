@@ -1,0 +1,190 @@
+{
+  "audit-docs-contributor": {
+    "repository": {
+      "organization": "msasg",
+      "project": "Engineering Fundamentals",
+      "projectId": "b03927a9-4d41-4a29-865d-b1d980f6dee9",
+      "name": "Audit",
+      "id": "489b2a17-1281-42b5-8544-7f31f2a2e1d7",
+      "allowedTargetBranches": ["refs/heads/main"],
+      "allowedSourcePrefixes": ["refs/heads/users/nibeauli/audit-docs-"]
+    },
+    "pluginMarketplaces": [],
+    "toolsets": {
+      "ado": {
+        "instances": [{"organization": "msasg"}],
+        "tools": [
+          "repo_repository", "repo_branch", "repo_file", "repo_pull_request",
+          "repo_pull_request_thread", "repo_search_commits", "repo_create_branch",
+          "repo_pull_request_write", "repo_pull_request_thread_write"
+        ]
+      },
+      "watch": {
+        "instances": [{}],
+        "tools": ["finish_pull_request", "check_pull_request_feedback"]
+      }
+    }
+  },
+  "engsys-contributor": {
+    "repository": {
+      "organization": "msasg",
+      "project": "Engineering Fundamentals",
+      "projectId": "b03927a9-4d41-4a29-865d-b1d980f6dee9",
+      "name": "engsys",
+      "id": "b42806f3-3a50-4b92-918d-9e87c616e79e"
+    },
+    "pluginMarketplaces": [
+      "agency-microsoft/playground",
+      "agency-microsoft/curated",
+      "agency-microsoft/.github-private"
+    ],
+    "toolsets": {
+      "ado": {
+        "instances": [{"organization": "msasg"}],
+        "tools": [
+          "core_list_projects", "core_list_project_teams", "repo_repository",
+          "repo_branch", "repo_file", "repo_pull_request", "repo_pull_request_thread",
+          "repo_search_commits", "wit_query", "wit_work_item", "search_wiki",
+          "search_workitem", "wiki", "repo_create_branch", "repo_pull_request_write",
+          "repo_pull_request_thread_write", "wit_work_item_write",
+          "wit_work_item_comment_write", "wit_work_item_link_write",
+          "wit_work_item_attachment_link_write"
+        ]
+      },
+      "watch": {
+        "instances": [{}],
+        "tools": ["finish_pull_request", "check_pull_request_feedback"]
+      },
+      "bluebird": {
+        "instances": [{}],
+        "tools": ["code_history", "code_search", "code_read", "code_graph", "project_search", "metadata"]
+      },
+      "enghub": {
+        "instances": [{}],
+        "tools": ["search", "fetch", "get_source_link", "resolve_service", "get_service_nodes", "get_node_tree", "submit_feedback"]
+      },
+      "workiq": {
+        "instances": [{}],
+        "tools": ["ask", "fetch", "fetch_blob", "get_schema", "retrieve", "search_paths", "list_agents"]
+      }
+    }
+  },
+  "slopmop-contributor": {
+    "repository": {
+      "organization": "msasg",
+      "project": "Engineering Fundamentals",
+      "projectId": "b03927a9-4d41-4a29-865d-b1d980f6dee9",
+      "name": "engsys",
+      "id": "b42806f3-3a50-4b92-918d-9e87c616e79e",
+      "allowedTargetBranches": ["refs/heads/users/nibeauli/slopmop-devel"],
+      "allowedSourcePrefixes": ["refs/heads/users/nibeauli/slopmop-demo-"]
+    },
+    "pluginMarketplaces": [
+      "agency-microsoft/playground",
+      "agency-microsoft/curated",
+      "agency-microsoft/.github-private"
+    ],
+    "toolsets": {
+      "ado": {
+        "instances": [{"organization": "msasg"}],
+        "tools": [
+          "core_list_projects", "core_list_project_teams", "repo_repository",
+          "repo_branch", "repo_file", "repo_pull_request", "repo_pull_request_thread",
+          "repo_search_commits", "wit_query", "wit_work_item", "search_wiki",
+          "search_workitem", "wiki", "repo_pull_request_write"
+        ]
+      },
+      "watch": {
+        "instances": [{}],
+        "tools": ["finish_pull_request", "check_pull_request_feedback"]
+      },
+      "bluebird": {
+        "instances": [{}],
+        "tools": ["code_history", "code_search", "code_read", "code_graph", "project_search", "metadata"]
+      },
+      "enghub": {
+        "instances": [{}],
+        "tools": ["search", "fetch", "get_source_link", "resolve_service", "get_service_nodes", "get_node_tree"]
+      },
+      "workiq": {
+        "instances": [{}],
+        "tools": ["ask", "fetch", "fetch_blob", "get_schema", "retrieve", "search_paths", "list_agents"]
+      }
+    }
+  },
+  "engsys-reader": {
+    "repository": {
+      "organization": "msasg",
+      "project": "Engineering Fundamentals",
+      "projectId": "b03927a9-4d41-4a29-865d-b1d980f6dee9",
+      "name": "engsys",
+      "id": "b42806f3-3a50-4b92-918d-9e87c616e79e"
+    },
+    "pluginMarketplaces": [
+      "agency-microsoft/playground",
+      "agency-microsoft/curated",
+      "agency-microsoft/.github-private"
+    ],
+    "toolsets": {
+      "ado": {
+        "instances": [{"organization": "msasg"}],
+        "tools": [
+          "core_list_projects", "core_list_project_teams", "repo_repository",
+          "repo_branch", "repo_file", "repo_pull_request", "repo_pull_request_thread",
+          "repo_search_commits", "wit_query", "wit_work_item", "search_wiki",
+          "search_workitem", "wiki"
+        ]
+      },
+      "bluebird": {
+        "instances": [{}],
+        "tools": ["code_history", "code_search", "code_read", "code_graph", "project_search", "metadata"]
+      },
+      "enghub": {
+        "instances": [{}],
+        "tools": ["search", "fetch", "get_source_link", "resolve_service", "get_service_nodes", "get_node_tree"]
+      },
+      "workiq": {
+        "instances": [{}],
+        "tools": ["ask", "fetch", "fetch_blob", "get_schema", "retrieve", "search_paths", "list_agents"]
+      }
+    }
+  },
+  "slopmop-triage": {
+    "repository": {
+      "organization": "msasg",
+      "project": "Engineering Fundamentals",
+      "projectId": "b03927a9-4d41-4a29-865d-b1d980f6dee9",
+      "name": "engsys",
+      "id": "b42806f3-3a50-4b92-918d-9e87c616e79e"
+    },
+    "pluginMarketplaces": [
+      "agency-microsoft/playground",
+      "agency-microsoft/curated",
+      "agency-microsoft/.github-private"
+    ],
+    "toolsets": {
+      "ado": {
+        "instances": [{"organization": "msasg"}],
+        "tools": [
+          "repo_repository", "repo_branch", "repo_file", "repo_pull_request",
+          "repo_pull_request_thread", "repo_search_commits", "wit_query",
+          "wit_work_item", "search_wiki", "search_workitem", "wiki",
+          "wit_work_item_write", "wit_work_item_comment_write",
+          "wit_work_item_link_write"
+        ]
+      },
+      "bluebird": {
+        "instances": [{}],
+        "tools": ["code_history", "code_search", "code_read", "project_search", "metadata"]
+      },
+      "enghub": {
+        "instances": [{}],
+        "tools": ["search", "fetch", "get_source_link"]
+      },
+      "workiq": {
+        "instances": [{}],
+        "tools": ["ask", "fetch", "fetch_blob", "get_schema", "retrieve", "search_paths", "list_agents"]
+      }
+    }
+  }
+}

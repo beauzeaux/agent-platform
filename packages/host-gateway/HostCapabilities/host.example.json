@@ -1,0 +1,98 @@
+{
+  "controlPort": 14540,
+  "stateDirectory": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\canary",
+  "shutdownSeconds": 20,
+  "llm": {
+    "enabled": true,
+    "options": {
+      "host": "127.0.0.1",
+      "port": 4142,
+      "maxConcurrentRequests": 4,
+      "requestTimeoutSeconds": 1800,
+      "maxRequestBytes": 30000000,
+      "accountType": "individual",
+      "dataDir": "C:\\Users\\<user>\\AppData\\Roaming\\local-llm-gateway",
+      "gatewayKeyFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\gateway-key"
+    }
+  },
+  "ado": {
+    "enabled": true,
+    "mode": "delegate",
+    "configurationFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\ado.canary.json",
+    "stateDirectory": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\ado-canary",
+    "delegatePort": 5480,
+    "delegateControlPort": 5481
+  },
+  "agency": {
+    "enabled": true,
+    "listenAddress": "127.0.0.1",
+    "port": 15443,
+    "internalPort": 15444,
+    "pythonExecutable": "C:\\Path\\To\\python.exe",
+    "brokerScript": "Q:\\tools\\kagent-lab\\agency-broker\\broker.py",
+    "brokerConfigurationFile": "Q:\\tools\\kagent-lab\\agency-broker\\state\\broker.json",
+    "stateDirectory": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\agency-canary",
+    "profilesFile": "Q:\\tools\\kagent-lab\\agency-broker\\profiles.json",
+    "agencyExecutable": "C:\\.Tools\\agency\\2026.10.29.2\\agency.exe",
+    "globalConfigurationFile": "Q:\\tools\\kagent-lab\\agency-broker\\global-config",
+    "maxConcurrentRequests": 4,
+    "maxConcurrentPlugins": 1,
+    "requestTimeoutSeconds": 2000
+  },
+  "telemetry": {
+    "serviceName": "host-capabilities",
+    "otlpEndpoint": "https://localhost:14318/",
+    "trustMode": "pinned-private",
+    "serverCertificateFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\telemetry\\server.crt",
+    "caCertificateFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\telemetry\\ca.crt",
+    "clientCertificateFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\telemetry\\client.pfx",
+    "clientCertificatePasswordFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\telemetry\\client-password"
+  },
+  "nativeAdo": {
+    "enabled": false,
+    "listenAddress": "127.0.0.1",
+    "port": 5443,
+    "configurationFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\ado.canary.json",
+    "stateDirectory": "C:\\Users\\<user>\\AppData\\Local\\AdoDevProxy",
+    "servingCertificateFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\native-ado\\server.pfx",
+    "servingCertificatePasswordFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\native-ado\\server-password",
+    "gatewaySpiffeId": "spiffe://cluster.local/ns/<canary>/sa/<gateway-service-account>",
+    "gatewayRootFiles": ["C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\native-ado\\podidentity-root.crt"],
+    "gatewayIntermediateFiles": [],
+    "trustMode": "online",
+    "maxLeafLifetimeHours": 24,
+    "maxConcurrency": 4,
+    "requestTimeoutSeconds": 15,
+    "minimumTokenLifetimeSeconds": 480,
+    "grants": [{
+      "actorSpiffeId": "spiffe://cluster.local/<exact-canary-actor>",
+      "credentialUri": "ate-secret://windows-wam/canary/ado",
+      "identity": "<approved-host-identity-alias>",
+      "profile": "<approved-profile>"
+    }]
+  },
+  "imds": {
+    "enabled": false,
+    "configurationFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\ado.canary.json",
+    "stateDirectory": "C:\\Users\\<user>\\AppData\\Local\\AdoDevProxy",
+    "identity": "<approved-host-identity-alias>",
+    "allowedProfiles": [
+      "audit-docs-contributor"
+    ]
+  },
+  "actorJwt": {
+    "enabled": false,
+    "allowLegacyKeys": true,
+    "issuer": "https://<pinned-issuer>",
+    "audience": "<host-audience>",
+    "jwksFile": "C:\\Users\\<user>\\AppData\\Local\\HostCapabilities\\actor-jwks.json",
+    "space": "<pinned-space>",
+    "profiles": ["engsys-reader"],
+    "claimFormat": "substrate",
+    "actorClaim": "actor.ate.dev",
+    "actorRegistryFile": "Q:\\tools\\kagent-lab\\agency-broker\\state\\broker.json",
+    "actorUidClaim": "actor_uid",
+    "profileClaim": "profile",
+    "spaceClaim": "space"
+  }
+}

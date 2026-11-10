@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <ProjectReference Include="..\..\..\LocalLlmGateway\src\LocalLlmGateway\LocalLlmGateway.csproj"
+                      AdditionalProperties="UseArtifactsOutput=true;ArtifactsPath=$(ArtifactsPath)" />
+    <ProjectReference Include="..\..\..\ado-dev-proxy\src\AdoDevProxy\AdoDevProxy.csproj"
+                      AdditionalProperties="UseArtifactsOutput=true;ArtifactsPath=$(ArtifactsPath)" />
+    <ProjectReference Include="..\..\native-ado\src\NativeAdo\NativeAdo.csproj"
+                      AdditionalProperties="UseArtifactsOutput=true;ArtifactsPath=$(ArtifactsPath)" />
+    <InternalsVisibleTo Include="HostCapabilities.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="THIRD-PARTY-NOTICES" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\..\LocalLlmGateway\THIRD-PARTY-NOTICES"
+             Link="LocalLlmGateway.THIRD-PARTY-NOTICES" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

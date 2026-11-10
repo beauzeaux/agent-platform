@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["image", "existingTlsSecret", "auth", "bridge", "tlsNames", "limits"],
+  "properties": {
+    "fullnameOverride": { "type": "string", "maxLength": 63 },
+    "replicaCount": { "type": "integer", "minimum": 1, "maximum": 8 },
+    "existingTlsSecret": { "type": "string", "minLength": 1 },
+    "image": {
+      "type": "object",
+      "required": ["repository", "tag", "digest", "pullPolicy"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^$|^sha256:[a-f0-9]{64}$" },
+        "pullPolicy": { "enum": ["Always", "IfNotPresent", "Never"] }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "required": ["issuer", "audience", "jwks", "allowedAtespaces", "actorClaim"],
+      "properties": {
+        "issuer": { "type": "string", "minLength": 1 },
+        "audience": { "type": "string", "minLength": 1 },
+        "actorClaim": { "type": "string", "minLength": 1 },
+        "jwks": {
+          "type": "object",
+          "required": ["keys"],
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["kty"],
+                "properties": {
+                  "kty": { "enum": ["RSA", "EC"] },
+                  "alg": { "enum": ["RS256", "ES256"] }
+                },
+                "not": {
+                  "anyOf": [
+                    { "required": ["d"] }, { "required": ["k"] },
+                    { "required": ["p"] }, { "required": ["q"] },
+                    { "required": ["dp"] }, { "required": ["dq"] },
+                    { "required": ["qi"] }, { "required": ["oth"] }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "allowedAtespaces": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }
+        }
+      }
+    },
+    "bridge": {
+      "type": "object",
+      "required": ["host", "servername", "modelPort", "connectPort"],
+      "properties": {
+        "host": { "type": "string", "minLength": 1 },
+        "servername": { "type": "string", "minLength": 1 },
+        "modelPort": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "connectPort": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+    "tlsNames": {
+      "type": "object",
+      "required": ["serverCert", "serverKey", "clientCert", "clientKey", "ca"],
+      "properties": {
+        "serverCert": { "$ref": "#/definitions/filename" },
+        "serverKey": { "$ref": "#/definitions/filename" },
+        "clientCert": { "$ref": "#/definitions/filename" },
+        "clientKey": { "$ref": "#/definitions/filename" },
+        "ca": { "$ref": "#/definitions/filename" },
+        "tokenSigningKey": { "type": "string", "pattern": "^$|^[A-Za-z0-9_.-]+$" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "maxConnections": { "type": "integer", "minimum": 1, "maximum": 4096 },
+        "maxConcurrent": { "type": "integer", "minimum": 1, "maximum": 512 },
+        "maxBodyBytes": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "headersTimeoutMs": { "$ref": "#/definitions/timeout" },
+        "requestTimeoutMs": { "$ref": "#/definitions/timeout" },
+        "idleTimeoutMs": { "$ref": "#/definitions/timeout" },
+        "maxDurationMs": { "$ref": "#/definitions/timeout" }
+      }
+    },
+    "resources": { "type": "object" }
+  },
+  "definitions": {
+    "filename": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+    "timeout": { "type": "integer", "minimum": 100, "maximum": 3600000 }
+  },
+  "allOf": [{
+    "if": { "properties": { "replicaCount": { "minimum": 2 } }, "required": ["replicaCount"] },
+    "then": {
+      "properties": {
+        "tlsNames": {
+          "required": ["tokenSigningKey"],
+          "properties": { "tokenSigningKey": { "minLength": 1 } }
+        }
+      }
+    }
+  }]
+}

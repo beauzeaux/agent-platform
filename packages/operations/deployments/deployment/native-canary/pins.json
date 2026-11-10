@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "baseRepository": "kagent-lab/factory-coder",
+  "baseManifest": "sha256:b8b03c7e4145b0af095713e2c1fd00b0dadf6c9d48b0fe75d794cc05b886dfe8",
+  "sdkVersion": "1.0.28",
+  "publicPrompt": "Reply exactly NATIVE_HOST_OK."
+}

@@ -1,0 +1,128 @@
+fullnameOverride: host-otel-collector
+mode: deployment
+replicaCount: 1
+image:
+  repository: otel/opentelemetry-collector-contrib
+  tag: 0.163.2
+command:
+  name: otelcol-contrib
+serviceAccount:
+  create: true
+  automountServiceAccountToken: false
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+  readOnlyRootFilesystem: true
+extraVolumes:
+  - name: host-tls
+    secret:
+      secretName: host-otel-tls
+      defaultMode: 288
+extraVolumeMounts:
+  - name: host-tls
+    mountPath: /conf/host-tls
+    readOnly: true
+ports:
+  otlp:
+    enabled: true
+  otlp-http:
+    enabled: true
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics-export:
+    enabled: true
+    containerPort: 8889
+    servicePort: 8889
+    protocol: TCP
+config:
+  receivers:
+    jaeger: null
+    prometheus: null
+    zipkin: null
+    otlp:
+      protocols:
+        grpc:
+          endpoint: ${env:MY_POD_IP}:4317
+        http:
+          endpoint: 0.0.0.0:4318
+          tls:
+            cert_file: /conf/host-tls/tls.crt
+            key_file: /conf/host-tls/tls.key
+            client_ca_file: /conf/host-tls/ca.crt
+  processors:
+    memory_limiter:
+      check_interval: 5s
+      limit_mib: 384
+      spike_limit_mib: 64
+    batch:
+      timeout: 2s
+      send_batch_size: 256
+    filter/no_payload_events:
+      error_mode: propagate
+      trace_conditions:
+        - context: spanevent
+          conditions:
+            - "true"
+    transform/metadata:
+      error_mode: propagate
+      trace_statements:
+        - context: resource
+          statements:
+            - keep_keys(resource.attributes, ["service.name", "service.namespace", "service.version", "host.name", "deployment.environment.name", "k8s.cluster.name"])
+        - context: span
+          statements:
+            - keep_keys(span.attributes, ["http.request.method", "http.route", "http.response.status_code", "server.address", "server.port", "rpc.system", "rpc.service", "rpc.method", "error.type", "gen_ai.operation.name", "gen_ai.provider.name", "gen_ai.request.model", "gen_ai.response.model", "gen_ai.usage.input_tokens", "gen_ai.usage.output_tokens", "gen_ai.tool.name", "gen_ai.conversation.id", "gen_ai.agent.id", "a2a.task.id", "host.capability", "host.operation", "host.outcome", "host.upstream.status_code", "host.mcp.toolset", "host.mcp.tool", "host.auth.profile", "host.actor.id", "host.actor.profile", "host.session.id", "host.sdk.session.id", "host.request.id"])
+            - set(span.status.message, "")
+      metric_statements:
+        - context: resource
+          statements:
+            - keep_keys(resource.attributes, ["service.name", "service.namespace", "service.version", "deployment.environment.name"])
+        - context: datapoint
+          statements:
+            - keep_keys(datapoint.attributes, ["capability", "module", "operation", "outcome", "model", "tool", "toolset", "layer", "profile", "status_code", "upstream_status_code", "error.type", "http.request.method", "http.route", "http.response.status_code", "rpc.method", "gen_ai.operation.name", "gen_ai.provider.name", "gen_ai.request.model", "gen_ai.tool.name", "host.capability", "host.outcome", "host.mcp.toolset", "host.mcp.tool"])
+  exporters:
+    debug: null
+    otlp_grpc/tempo:
+      endpoint: tempo.observability.svc.cluster.local:4317
+      tls:
+        insecure: true
+      sending_queue:
+        enabled: true
+        queue_size: 512
+      retry_on_failure:
+        enabled: true
+        max_elapsed_time: 5m
+    prometheus:
+      endpoint: ${env:MY_POD_IP}:8889
+      resource_to_telemetry_conversion:
+        enabled: false
+  service:
+    pipelines:
+      logs: null
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, filter/no_payload_events, transform/metadata, batch]
+        exporters: [otlp_grpc/tempo]
+      metrics:
+        receivers: [otlp]
+        processors: [memory_limiter, transform/metadata, batch]
+        exporters: [prometheus]

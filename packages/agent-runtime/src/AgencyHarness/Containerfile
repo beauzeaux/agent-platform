@@ -1,0 +1,59 @@
+ARG DOTNET_IMAGE=mcr.microsoft.com/dotnet/sdk:10.0@sha256:de4fe90a98845d75910b9769662465c84de1a934665c431279d1382b2bddc02b
+ARG NODE_IMAGE=node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c
+ARG AZURE_CLI_IMAGE=mcr.microsoft.com/azure-cli@sha256:fb9f99e7db198c6b371dd93b1a527f43d88aaa3eb6b3f67687b510e5b24c8471
+FROM ${NODE_IMAGE} AS node
+FROM ${AZURE_CLI_IMAGE} AS azure-cli
+FROM ${DOTNET_IMAGE}
+USER root
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
+COPY --from=azure-cli /usr/bin/az /opt/azure-cli/bin/az
+COPY --from=azure-cli /usr/bin/python3.12 /opt/azure-cli/bin/python3.12
+COPY --from=azure-cli /usr/lib/python3.12/ /opt/azure-cli/lib/python3.12/
+COPY --from=azure-cli /usr/lib64/libpython3.12.so.1.0 /opt/azure-cli/lib64/libpython3.12.so.1.0
+COPY --from=azure-cli /usr/lib64/libssl.so.3 /opt/azure-cli/lib64/libssl.so.3
+COPY --from=azure-cli /usr/lib64/libcrypto.so.3 /opt/azure-cli/lib64/libcrypto.so.3
+COPY --from=azure-cli /usr/lib64/python3.12/ /opt/azure-cli/lib64/python3.12/
+COPY --from=azure-cli /usr/lib64/az/ /opt/azure-cli/lib64/az/
+COPY agency/agency /opt/agency/agency
+COPY copilot/ /opt/agency/copilot/
+COPY transport/*.js /opt/proxy/
+COPY gcm/ /opt/gcm/
+COPY nuget/plugins/ /opt/nuget/plugins/
+COPY npm-provider/ /opt/npm-provider/
+COPY auth/ /opt/agency/auth/
+COPY native/harness /app/harness
+RUN chmod 755 /app/harness /opt/agency/agency /opt/agency/copilot/copilot /opt/gcm/git-credential-manager \
+        /opt/npm-provider/bin/index.js /opt/agency/auth/* \
+    && ln -s /opt/gcm/git-credential-manager /usr/local/bin/git-credential-manager \
+    && ln -s /opt/agency/agency /usr/local/bin/agency \
+    && ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm-real \
+    && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx-real \
+    && ln -s /opt/agency/auth/npm /usr/local/bin/npm \
+    && ln -s /opt/agency/auth/npx /usr/local/bin/npx \
+    && ln -s /opt/npm-provider/bin/index.js /usr/local/bin/artifacts-npm-credprovider \
+    && printf '%s\n' '#!/bin/sh' \
+        'export LD_LIBRARY_PATH=/opt/azure-cli/lib64' \
+        'export PYTHONHOME=/opt/azure-cli' \
+        'export PATH=/opt/azure-cli/bin:$PATH' \
+        'exec /opt/azure-cli/bin/az "$@"' > /usr/local/bin/az-real \
+    && chmod 755 /usr/local/bin/az-real \
+    && ln -s /opt/agency/auth/az /usr/local/bin/az \
+    && useradd --uid 10001 --create-home --shell /usr/sbin/nologin agent \
+    && mkdir -p /config /data/home /opt/agency/global-config \
+    && chown -R 10001:10001 /config /data \
+    && test -x /usr/bin/git && test -x /usr/bin/dotnet \
+    && az version --output json >/dev/null
+ENV HOME=/data/home DOTNET_CLI_HOME=/data/home \
+    AZURE_CONFIG_DIR=/data/home/.azure \
+    AGENT_NATIVE_CONFIG=true \
+    AGENCY_COPILOT_PATH=/opt/agency/copilot/copilot \
+    AGENCY_COPILOT_PLUGIN_DIR_ONLY=true \
+    AGENCY_GLOBAL_CONFIG_PATH=/opt/agency/global-config \
+    COPILOT_TELEMETRY_DISABLED=true COPILOT_GITHUB_TELEMETRY_DISABLED=true \
+    NUGET_PLUGIN_PATHS=/opt/nuget/plugins/netcore/CredentialProvider.Microsoft/CredentialProvider.Microsoft.dll \
+    READY_PORT=18081
+WORKDIR /app
+USER 10001:10001
+ENTRYPOINT ["/opt/agency/auth/entrypoint"]
+CMD []

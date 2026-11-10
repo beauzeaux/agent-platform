@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: windows-wam
+  namespace: proxy-access
+  labels:
+    app.kubernetes.io/part-of: host-capabilities-native-ado-canary
+spec:
+  type: ClusterIP
+  ports:
+  - name: grpcs
+    port: 5443
+    targetPort: 15443
+    protocol: TCP
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: windows-wam-primary-wsl
+  namespace: proxy-access
+  labels:
+    kubernetes.io/service-name: windows-wam
+    endpointslice.kubernetes.io/managed-by: hostcapabilities-native-ado
+addressType: IPv4
+ports:
+- name: grpcs
+  port: 15443
+  protocol: TCP
+endpoints:
+- addresses:
+  - 10.82.0.2
+  conditions:
+    ready: true

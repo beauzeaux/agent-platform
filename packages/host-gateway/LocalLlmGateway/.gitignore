@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+TestResults/
+*.user
+*.suo
+.env
+.env.*
+gateway-key*
+credentials.json
+config.local.json
+local-state/

@@ -1,0 +1,19 @@
+packages:
+  - name: host-gateway
+    deployment: hybrid
+  - name: host-network
+    deployment: hybrid
+  - name: agent-runtime
+    deployment: oci
+  - name: agent-workloads
+    deployment: oci-and-helm
+  - name: kagent-platform
+    deployment: helm
+  - name: identity
+    deployment: hybrid
+  - name: platform-state
+    deployment: helm
+  - name: observability
+    deployment: helm
+  - name: operations
+    deployment: automation

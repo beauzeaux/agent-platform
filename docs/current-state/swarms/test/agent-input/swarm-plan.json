@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "kind": "SwarmPreparationPlan",
+  "project": "test",
+  "state": "prepared-not-activated",
+  "executable": false,
+  "activation": {
+    "enabled": false,
+    "dispatchEnabled": false,
+    "createSessions": false,
+    "applyResources": false,
+    "runInference": false,
+    "automaticMerge": false,
+    "requiredGates": [
+      "packet-and-initial-milestone-approved",
+      "run-budget-approved",
+      "test-only-runtime-and-tool-bindings",
+      "negative-source-access-proven",
+      "blank-workspace-and-memory-isolation-proven",
+      "reviewed-sandboxed-validation-commands",
+      "independent-sdet-environments",
+      "sdet-model-diversity-and-tool-capability-proof",
+      "high-capability-reviewer-diversity-and-model-availability-proof",
+      "exact-target-and-ancestry-policy",
+      "trusted-coordinator-review-and-recovery-gates",
+      "documentation-and-model-tool-bindings",
+      "approved-native-tm7-validator-and-compatibility-proof",
+      "separately-authorized-model-tool-canary"
+    ]
+  },
+  "inputFiles": ["BRIEF.md", "ROADMAP.md", "AGENTS.md", "DOCUMENTATION.md", "swarm-plan.json"],
+  "source": {
+    "delivery": "trusted-export-only",
+    "baseBranch": "users/nibeauli/test/base",
+    "baseCommit": "5625d63bb645a0ae69101b7574d73194ecb50993",
+    "baseHasParents": false,
+    "baseHasFiles": false,
+    "directRemoteAccess": false,
+    "keepBaseImmutable": true,
+    "futureIntegrationBranch": "users/nibeauli/test/integration",
+    "futureWorkBranchPrefix": "users/nibeauli/test/work/",
+    "futureTestBranchPrefix": "users/nibeauli/test/qa/",
+    "remoteWrites": "trusted-operator-only-after-review"
+  },
+  "modelPolicy": {
+    "productionAuthors": "mai-code-2",
+    "testAuthors": {
+      "sdet-contract": "gpt-6.1-terra",
+      "sdet-journey": "grok-4.7"
+    },
+    "testModelDiversityRequired": true,
+    "codeReviewers": {
+      "architect": "gpt-6.1-sol",
+      "sod-reviewer": "gemini-4-argon",
+      "trail-reviewer": "gpt-6.1-sol"
+    },
+    "reviewerModelDiversityRequired": true,
+    "reviewerCapabilityTier": "high-capability",
+    "proposedJudgmentDefault": "gpt-5.6-sol",
+    "fallbackAllowed": false
+  },
+  "proposedExecutionLimits": {
+    "approved": false,
+    "activeCampaigns": 1,
+    "activeProductionAuthors": 3,
+    "activeModelRequests": 4,
+    "maximumReworkRoundsPerTask": 2,
+    "monetaryCapGuaranteed": false
+  },
+  "isolation": {
+    "workspace": "fresh-test-lineage-only",
+    "candidateSource": "immutable-reviewed-commit",
+    "plugins": [],
+    "externalMcpToolsets": [],
+    "externalSourceSearch": false,
+    "unrestrictedShell": false,
+    "arbitraryNetwork": false,
+    "packageFeeds": "approved-1es-only",
+    "dependencyAcquisition": "trusted-operator-prefetch; actor-validation-offline",
+    "data": "synthetic-only",
+    "memory": "disabled-until-fresh-role-and-creator-scopes-proven",
+    "reusePriorSessionsOrSnapshots": false,
+    "secretsInPacket": false
+  },
+  "toolContract": {
+    "status": "desired-bindings-not-installed",
+    "reusableRepositoryPrimitives": [
+      "repo_status", "repo_list", "repo_read", "repo_diff", "repo_check",
+      "repo_write", "repo_delete"
+    ],
+    "requiredBindings": {
+      "artifact_read": "Read only assigned packet, approved decisions and version-pinned receipts.",
+      "artifact_write": "Write only the calling role's assigned output artifacts.",
+      "validate_api_core": "Reviewed sandboxed bootstrap/build, focused tests and formatting using offline dependencies; no caller-supplied shell.",
+      "validate_persistence": "Reviewed provider bootstrap, SQL migration/integration and query-budget tests against the owned disposable database.",
+      "validate_ux": "Reviewed frontend bootstrap/build, test and lint using operator-prefetched offline dependencies.",
+      "validate_contract": "Independent API/SQL tests from a pinned test overlay and candidate.",
+      "validate_journey": "Reviewed browser/accessibility/journey checks against the owned local test application.",
+      "test_environment": "Create/reset/stop only the calling SDET's disposable synthetic environment.",
+      "test_sql_read": "Read-only assertions in the assigned test database; no infrastructure access.",
+      "test_evidence_read": "Read only candidate-bound test exports, fixture manifests and test receipts.",
+      "validate_documentation": "Reviewed offline Markdown/link/API-reference checks and SDET command/journey receipts; no arbitrary command execution.",
+      "render_mermaid": "Pinned Mermaid CLI with local assets, restricted trusted configuration and confined temporary rendering outputs.",
+      "generate_threat_model": "Reviewed pinned TM7 generator/update and Markdown-report scripts/assets; confined spec, prior model and output paths.",
+      "validate_threat_model": "Portable hardened parsing, semantic diff and flow/control coverage; preserve reviewed states/notes and flag lost or changed threats.",
+      "request_native_tm7_validation": "Emit a candidate/hash-bound request for trusted Windows TMT validation; no host or desktop-control authority."
+    },
+    "notGranted": [
+      "repo_commit", "repo_push", "repo_validate", "remote_git", "ado_rest",
+      "organizational_search", "history_search", "arbitrary_mcp",
+      "plugins", "unrestricted_shell", "cluster_admin", "live_cloud",
+      "live_email", "production_data", "merge_or_deploy", "agent_dispatch",
+      "desktop_control", "automatic_risk_acceptance"
+    ]
+  },
+  "roles": [
+    {
+      "id": "project-manager",
+      "model": "gpt-5.6-sol",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#project-manager",
+      "productionEdits": false,
+      "writeScope": ["own-planning-artifacts"],
+      "tools": ["artifact_read", "artifact_write"],
+      "owns": ["requirements", "backlog", "dependencies", "decision-ledger", "routing-requests"],
+      "canWaiveGates": false
+    },
+    {
+      "id": "architect",
+      "model": "gpt-6.1-sol",
+      "modelFamily": "gpt",
+      "modelChoice": "required",
+      "codeReviewer": true,
+      "instructions": "AGENTS.md#architect",
+      "productionEdits": false,
+      "writeScope": ["own-design-and-contract-proposals"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_diff", "repo_check"],
+      "owns": ["design", "layering", "shared-contract-review", "consistency-gate"]
+    },
+    {
+      "id": "api-core",
+      "model": "mai-code-2",
+      "modelChoice": "required",
+      "instructions": "AGENTS.md#api-core",
+      "productionEdits": true,
+      "writeScope": ["approved-core-and-api-files", "matching-author-tests"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "validate_api_core"],
+      "owns": ["core-abstractions", "api-contract-implementation", "protected-api-orchestration"]
+    },
+    {
+      "id": "persistence",
+      "model": "mai-code-2",
+      "modelChoice": "required",
+      "instructions": "AGENTS.md#persistence",
+      "productionEdits": true,
+      "writeScope": ["approved-provider-and-migration-files", "matching-author-tests"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "validate_persistence"],
+      "owns": ["sql-providers", "migrations", "transactional-audit", "query-budgets"]
+    },
+    {
+      "id": "ux",
+      "model": "mai-code-2",
+      "modelChoice": "required",
+      "instructions": "AGENTS.md#ux",
+      "productionEdits": true,
+      "writeScope": ["approved-frontend-files", "matching-author-tests"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "validate_ux"],
+      "owns": ["frontend", "accessibility", "review-workspace"]
+    },
+    {
+      "id": "sod-reviewer",
+      "model": "gemini-4-argon",
+      "modelFamily": "gemini",
+      "modelChoice": "required",
+      "codeReviewer": true,
+      "instructions": "AGENTS.md#sod-reviewer",
+      "productionEdits": false,
+      "writeScope": ["own-control-reports"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_diff", "test_evidence_read"],
+      "owns": ["identity-and-assignment-controls", "self-review-refusal", "sod-gate"]
+    },
+    {
+      "id": "trail-reviewer",
+      "model": "gpt-6.1-sol",
+      "modelFamily": "gpt",
+      "modelChoice": "required",
+      "codeReviewer": true,
+      "instructions": "AGENTS.md#trail-reviewer",
+      "productionEdits": false,
+      "writeScope": ["own-integrity-reports"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_diff", "test_evidence_read", "test_sql_read"],
+      "owns": ["state-ledger-reconciliation", "provenance", "integrity-boundaries", "trail-gate"]
+    },
+    {
+      "id": "sdet-contract",
+      "model": "gpt-6.1-terra",
+      "modelFamily": "gpt",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#sdet-contract",
+      "productionEdits": false,
+      "writeScope": ["own-independent-test-overlay", "own-test-reports"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "validate_contract", "test_environment", "test_sql_read", "test_evidence_read"],
+      "owns": ["independent-api-and-sql-tests", "fixtures", "contract-test-gate"]
+    },
+    {
+      "id": "sdet-journey",
+      "model": "grok-4.7",
+      "modelFamily": "grok",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#sdet-journey",
+      "productionEdits": false,
+      "writeScope": ["own-independent-browser-test-overlay", "own-test-reports"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "validate_journey", "test_environment", "test_evidence_read"],
+      "owns": ["browser-journeys", "accessibility-tests", "journey-test-gate"]
+    },
+    {
+      "id": "user-documentation",
+      "model": "gpt-5.6-sol",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#user-documentation",
+      "productionEdits": false,
+      "writeScope": ["approved-user-documentation-files", "own-documentation-receipts"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "test_evidence_read", "validate_documentation"],
+      "owns": ["role-based-user-guides", "task-walkthroughs", "user-troubleshooting"],
+      "independentValidationOwner": "sdet-journey"
+    },
+    {
+      "id": "developer-documentation",
+      "model": "gpt-5.6-sol",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#developer-documentation",
+      "productionEdits": false,
+      "writeScope": ["approved-maintainer-and-auditor-documentation-files", "own-documentation-receipts"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "test_evidence_read", "validate_documentation"],
+      "owns": ["developer-setup", "code-and-contract-map", "control-to-code-test-evidence-index"],
+      "independentValidationOwner": "sdet-contract"
+    },
+    {
+      "id": "flows-threat-model",
+      "model": "gpt-5.6-sol",
+      "modelChoice": "proposed",
+      "instructions": "AGENTS.md#flows-threat-model",
+      "productionEdits": false,
+      "writeScope": ["approved-key-flow-markdown-and-mermaid", "approved-threat-model-spec-tm7-and-report", "own-model-change-receipts"],
+      "tools": ["artifact_read", "artifact_write", "repo_status", "repo_list", "repo_read", "repo_write", "repo_delete", "repo_diff", "repo_check", "test_evidence_read", "validate_documentation", "render_mermaid", "generate_threat_model", "validate_threat_model", "request_native_tm7_validation"],
+      "owns": ["key-flow-catalog", "mermaid-sequence-diagrams", "native-test-tm7", "model-spec-and-markdown-report"],
+      "independentValidationOwner": "architect",
+      "canAcceptRisk": false,
+      "canControlDesktop": false
+    }
+  ],
+  "documentationPolicy": {
+    "contract": "DOCUMENTATION.md",
+    "updateTiming": "draft-with-design; refresh-against-candidate-before-integration",
+    "artifactInputs": "test-lineage-and-approved-evidence-only",
+    "canonicalFlowOwner": "flows-threat-model",
+    "apiReferenceInput": "candidate-generated-approved-openapi",
+    "nativeModelFormat": "Microsoft-Threat-Modeling-Tool-tm7",
+    "modelGeneration": "reuse-reviewed-pinned-generator-not-custom-serializer",
+    "nativeValidationOwner": "trusted-windows-validator",
+    "nativeValidationTriggers": ["baseline-model", "affected-model-semantics", "model-template-profile-or-tool-change"],
+    "nativeUnavailableResult": "blocked-or-not-run",
+    "noImpactReuseRequiresIndependentReview": true,
+    "humanRiskAcceptanceRequired": true,
+    "desktopAutomationRequiresSeparateAuthorization": true
+  },
+  "requiredCandidateGates": [
+    {"id": "author-validation", "owner": "assigned-production-author"},
+    {"id": "architecture", "owner": "architect"},
+    {"id": "contract-tests", "owner": "sdet-contract"},
+    {"id": "journey-tests", "owner": "sdet-journey"},
+    {"id": "sod", "owner": "sod-reviewer"},
+    {"id": "trail-integrity", "owner": "trail-reviewer"},
+    {"id": "user-documentation-validation", "owner": "sdet-journey"},
+    {"id": "developer-documentation-validation", "owner": "sdet-contract"},
+    {"id": "flow-and-threat-model-review", "owner": "architect"},
+    {"id": "native-tm7-compatibility", "owner": "trusted-windows-validator"},
+    {"id": "integration", "owner": "trusted-human-or-coordinator"}
+  ],
+  "documentationReceiptContract": {
+    "required": [
+      "implementationCommit", "documentationInputHashes", "outputHashes",
+      "toolAndTemplateVersions", "flowControlTestCoverage", "validationEvidence",
+      "blockingFindings", "unverifiedBoundaries"
+    ],
+    "nativeModelReceiptAlsoRequires": [
+      "modelSha256", "specSha256", "previousModelSha256OrBaseline",
+      "nativeToolVersion", "nativeValidationStatus", "nativeEvidenceReferences",
+      "dispositionPreservationResult"
+    ]
+  },
+  "receiptContract": {
+    "required": [
+      "taskId", "role", "modelId", "candidateCommit", "requirementIds", "contractVersion",
+      "policyVersion", "fixtureVersion", "testOverlayCommit", "commands",
+      "result", "evidenceReferences", "blockingFindings", "untestedBoundaries"
+    ],
+    "results": ["pass", "fail", "blocked", "not-run"],
+    "candidateChangeInvalidatesAffectedReceipts": true,
+    "authorMayApproveOwnWork": false
+  }
+}

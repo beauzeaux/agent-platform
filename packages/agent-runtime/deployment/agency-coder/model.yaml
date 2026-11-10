@@ -1,0 +1,17 @@
+apiVersion: api.kagent.dev/v1alpha3
+kind: ModelConfig
+metadata:
+  name: ${MODEL_CONFIG_NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    app.kubernetes.io/managed-by: host-capabilities-agency-coder
+spec:
+  provider: OpenAI
+  model: ${MODEL_ID}
+  stream: true
+  openAI:
+    baseUrl: ${MODEL_BASE_URL}
+    apiFormat: responses
+  actorJwt:
+    audiences: ["${ACTOR_TOKEN_AUDIENCE}"]
+    expirationSeconds: 300

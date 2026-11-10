@@ -1,0 +1,26 @@
+rustfs:
+  storageSize: 100Gi
+credentialProvider:
+  namespacePolicies:
+    - atespace: kagent
+      allowedNamespaces: [kagent]
+    - atespace: factory-executions
+      allowedNamespaces: [factory-executions]
+      secretSelector:
+        matchLabels:
+          app.kubernetes.io/managed-by: host-capabilities-management
+          host-capabilities/access: management-model
+atelet:
+  extraArgs:
+    - --localhost-registry-replacement=registry.kagent.svc:5000
+atenetRouter:
+  ingressAllowedSPIFFEIDs:
+    - spiffe://cluster.local/ns/kagent/sa/kagent-controller
+    - spiffe://cluster.local/ns/ate-system/sa/atenet-client
+otel:
+  traces:
+    endpoint: http://tempo.observability.svc:4317
+  metrics:
+    enabled: false
+  logs:
+    enabled: false

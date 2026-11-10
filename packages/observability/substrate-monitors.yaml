@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: kagent-lab-substrate
+  namespace: observability
+  labels:
+    release: kube-prom-stack
+spec:
+  namespaceSelector:
+    matchNames: [ate-system]
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [ate-api-server, atelet]
+  podMetricsEndpoints:
+    - port: prometheus
+      path: /metrics
+      interval: 30s

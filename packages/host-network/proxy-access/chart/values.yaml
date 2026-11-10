@@ -1,0 +1,44 @@
+fullnameOverride: agent-proxies
+broker: {}
+replicaCount: 1
+image:
+  repository: ado-dev-proxy-agent
+  tag: local
+  digest: ""
+  pullPolicy: IfNotPresent
+existingTlsSecret: agent-proxies-tls
+tlsNames:
+  serverCert: tls.crt
+  serverKey: tls.key
+  clientCert: bridge-client.crt
+  clientKey: bridge-client.key
+  ca: ca.crt
+  tokenSigningKey: ""
+bridge:
+  host: 10.82.0.2
+  servername: bridge.proxy-access.internal
+  modelPort: 15441
+  connectPort: 15480
+auth:
+  issuer: https://idp.ate-system.svc
+  audience: https://agent-proxies.proxy-access.svc/session
+  jwks:
+    keys: []
+  allowedAtespaces:
+    - proxy-access
+  actorClaim: actor.ate.dev
+limits:
+  maxConnections: 128
+  maxConcurrent: 32
+  maxBodyBytes: 4194304
+  headersTimeoutMs: 15000
+  requestTimeoutMs: 30000
+  idleTimeoutMs: 60000
+  maxDurationMs: 600000
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: "1"
+    memory: 256Mi

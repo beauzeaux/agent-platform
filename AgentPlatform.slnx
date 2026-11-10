@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/agent-runtime/">
+    <Project Path="packages/agent-runtime/src/AgencyCoder/AgencyCoder.csproj" />
+    <Project Path="packages/agent-runtime/tests/AgencyCoder.Tests/AgencyCoder.Tests.csproj" />
+  </Folder>
+  <Folder Name="/host-gateway/">
+    <Project Path="packages/host-gateway/HostCapabilities/native-ado/src/NativeAdo/NativeAdo.csproj" />
+    <Project Path="packages/host-gateway/HostCapabilities/native-ado/tests/NativeAdo.Tests/NativeAdo.Tests.csproj" />
+    <Project Path="packages/host-gateway/HostCapabilities/src/HostCapabilities/HostCapabilities.csproj" />
+    <Project Path="packages/host-gateway/HostCapabilities/tests/HostCapabilities.Tests/HostCapabilities.Tests.csproj" />
+    <Project Path="packages/host-gateway/LocalLlmGateway/src/LocalLlmGateway/LocalLlmGateway.csproj" />
+    <Project Path="packages/host-gateway/LocalLlmGateway/tests/LocalLlmGateway.Tests/LocalLlmGateway.Tests.csproj" />
+    <Project Path="packages/host-gateway/ado-dev-proxy/src/AdoDevProxy/AdoDevProxy.csproj" />
+    <Project Path="packages/host-gateway/ado-dev-proxy/tests/AdoDevProxy.Tests/AdoDevProxy.Tests.csproj" />
+  </Folder>
+</Solution>

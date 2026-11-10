@@ -1,0 +1,31 @@
+grafana:
+  deleteDatasources:
+    - name: loki
+      orgId: 1
+    - name: tempo
+      orgId: 1
+  prune: true
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      uid: loki
+      url: http://loki.observability.svc.cluster.local:3100
+      access: proxy
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      url: http://tempo.observability.svc.cluster.local:3200
+      access: proxy
+      jsonData:
+        streamingEnabled:
+          search: true
+        tracesToLogsV2:
+          datasourceUid: loki
+          spanStartTimeShift: -1m
+          spanEndTimeShift: 1m
+          filterByTraceID: true
+          filterBySpanID: false
+        serviceMap:
+          datasourceUid: prometheus
+        nodeGraph:
+          enabled: true

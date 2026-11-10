@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+    --help|--version|-h|help|version)
+        exec az-real "$@"
+        ;;
+esac
+
+if [ "${AGENCY_AUTO_AZURE_LOGIN:-false}" = "true" ]; then
+    config=${AZURE_CONFIG_DIR:-"$HOME/.azure"}
+    marker="$config/.managed-identity-login"
+    lock="$config/.managed-identity-login.lock"
+    mkdir -p "$config"
+    while ! mkdir "$lock" 2>/dev/null; do
+        sleep 1
+    done
+    trap 'rmdir "$lock"' EXIT HUP INT TERM
+    if [ ! -f "$marker" ]; then
+        az-real login --identity --allow-no-subscriptions --only-show-errors --output none
+        az-real account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+            --only-show-errors --output none
+        : >"$marker"
+    fi
+    rmdir "$lock"
+    trap - EXIT HUP INT TERM
+fi
+
+exec az-real "$@"

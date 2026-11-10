@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/AdoDevProxy/AdoDevProxy.csproj" />
+  <Project Path="tests/AdoDevProxy.Tests/AdoDevProxy.Tests.csproj" />
+</Solution>

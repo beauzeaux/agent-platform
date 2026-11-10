@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "agent-proxies.name" . }}-code
+  labels:
+    {{- include "agent-proxies.labels" . | nindent 4 }}
+data:
+  auth.js: |
+{{ .Files.Get "files/auth.js" | indent 4 }}
+  transport.js: |
+{{ .Files.Get "files/transport.js" | indent 4 }}
+  gateway.js: |
+{{ .Files.Get "files/gateway.js" | indent 4 }}
+  agency-transport.js: |
+{{ .Files.Get "files/agency-transport.js" | indent 4 }}
+  config.json: |
+    {{- dict "auth" .Values.auth "bridge" .Values.bridge "limits" .Values.limits "tlsNames" .Values.tlsNames "broker" .Values.broker | toPrettyJson | nindent 4 }}

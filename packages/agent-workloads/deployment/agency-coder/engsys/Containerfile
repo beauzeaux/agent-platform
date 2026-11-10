@@ -1,0 +1,5 @@
+ARG AGENCY_CODER_IMAGE
+FROM ${AGENCY_CODER_IMAGE}
+ENV AGENCY_REPOSITORY_URL=https://dev.azure.com/msasg/Engineering%20Fundamentals/_git/engsys \
+    AGENCY_AUTO_AZURE_LOGIN=true \
+    ARTIFACTS_CREDENTIALPROVIDER_FEED_ENDPOINTS="{\"endpointCredentials\":[{\"endpoint\":\"https://pkgs.dev.azure.com/msasg/engineering%20fundamentals/_packaging/EngSys_Consume/nuget/v3/index.json\",\"clientId\":\"system\"},{\"endpoint\":\"https://pkgs.dev.azure.com/msasg/engineering%20fundamentals/_packaging/EngSys_Consume/npm/registry/\",\"clientId\":\"system\"}]}"

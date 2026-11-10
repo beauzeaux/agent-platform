@@ -1,0 +1,36 @@
+apiVersion: api.kagent.dev/v1alpha3
+kind: Harness
+metadata:
+  name: deterministic-byo
+  namespace: kagent
+spec:
+  byo: {}
+  workload:
+    image: localhost:15000/kagent-lab/deterministic-byo@sha256:9dbe4365efa1657aecbc51faf293512b6695b0a8c2e36bb14942f2194333f9e0
+    command: [/app/harness]
+  substrate:
+    workerPoolRef:
+      name: kagent-default
+    snapshotPolicy:
+      location: gs://ate-snapshots/kagent-lab-byo/
+---
+apiVersion: api.kagent.dev/v1alpha3
+kind: AgentTemplate
+metadata:
+  name: deterministic-byo-behavior
+  namespace: kagent
+spec:
+  description: Model-free persistence, session ownership, and workspace acceptance fixture.
+  systemPrompt: Execute only the deterministic commands implemented by the fixture.
+---
+apiVersion: api.kagent.dev/v1alpha3
+kind: Agent
+metadata:
+  name: deterministic-byo
+  namespace: kagent
+spec:
+  harnessRef:
+    name: deterministic-byo
+  template:
+    ref:
+      name: deterministic-byo-behavior
